@@ -35,6 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   http: 1.2.1
+  json_annotation: 4.9.0 #Needed to use json_serializable
 
 dev_dependencies:
   flutter_test:
@@ -45,7 +46,9 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
+  build_runner: 2.4.9 #Execute serializable Command: flutter pub run build_runner build --delete-conflicting-outputs
   flutter_lints: ^3.0.0
+  json_serializable: 6.8.0 #Json Serializable
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/car.dart';
 import 'package:flutter_app/screens/app_bar.dart';
+import 'package:flutter_app/screens/cars.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,6 +12,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  static const  List<Car> _cars = [];
 
   @override
   void initState() {
@@ -34,7 +37,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: [
-          Container(),
+          const Cars(cars: _cars),
           Container(),
           Container(),
         ],

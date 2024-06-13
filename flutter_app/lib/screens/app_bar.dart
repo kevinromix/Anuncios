@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 AppBar customAppBar({required TabController tabController}) {
   return AppBar(
-    centerTitle: false,
-    // backgroundColor: Colors.amber,
+    centerTitle: false, 
     title: const Text("Buscador Anuncio"),
     bottom: PreferredSize(
       preferredSize: const Size.fromHeight(70),
@@ -15,7 +14,7 @@ AppBar customAppBar({required TabController tabController}) {
 TabBar _tabBar({required TabController tabController}) {
   return TabBar(
     controller: tabController,
-    tabs: [
+    tabs: const [
       Tab(
         text: "Autos",
       ),
