@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/api/fetch.dart';
 import 'package:flutter_app/models/car.dart';
 import 'package:flutter_app/screens/app_bar.dart';
 import 'package:flutter_app/screens/cars.dart';
@@ -14,7 +15,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   // Controlador del TabView
   late TabController _tabController;
   // Lista de autos
-  static const List<Car> _cars = [];
+  final List<Car> _cars = [];
 
   @override
   void initState() {
@@ -23,6 +24,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       vsync: this,
       initialIndex: 0,
     );
+    _getAutos();
     super.initState();
   }
 
@@ -32,6 +34,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  Future<void> _getAutos() async {
+    await fetch(method: "get", path: "/autos").then((result) {
+      print(result.hasError);
+      print(result.message);
+      (result.data).forEach((car) => _cars.add(Car.fromJson(car)));
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +50,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: [
-          const Cars(cars: _cars),
+          Cars(cars: _cars),
           Container(),
           Container(),
         ],
