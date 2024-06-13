@@ -19,7 +19,11 @@ class _CarsState extends State<Cars> {
         itemCount: widget.cars.length,
         itemBuilder: (context, index) {
           Car car = widget.cars.elementAt(index);
-          return Card();
+          return Card(
+            child: ListTile(
+              title: Text(car.model),
+            ),
+          );
         });
   }
 }

@@ -39,7 +39,7 @@ Future<ResponseData> fetch({
         response = http.Response("", 500);
         break;
     }
-    dynamic jsonResponse = jsonDecode(response.body);
+    dynamic jsonResponse = await jsonDecode(response.body);
     switch (response.statusCode) {
       // Code: 200
       case 200:
