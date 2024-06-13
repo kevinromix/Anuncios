@@ -8,13 +8,36 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+      initialIndex: 0,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(),
-      body: Column(
-        children: [],
+      appBar: customAppBar(tabController: _tabController),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          Container(),
+          Container(),
+          Container(),
+        ],
       ),
     );
   }
