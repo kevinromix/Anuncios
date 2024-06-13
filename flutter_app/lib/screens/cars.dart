@@ -15,6 +15,11 @@ class Cars extends StatefulWidget {
 class _CarsState extends State<Cars> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ListView.builder(
+        itemCount: widget.cars.length,
+        itemBuilder: (context, index) {
+          Car car = widget.cars.elementAt(index);
+          return Card();
+        });
   }
 }

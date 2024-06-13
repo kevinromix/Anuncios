@@ -11,8 +11,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  // Controlador del TabView
   late TabController _tabController;
-  static const  List<Car> _cars = [];
+  // Lista de autos
+  static const List<Car> _cars = [];
 
   @override
   void initState() {
