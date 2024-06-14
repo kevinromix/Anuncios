@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/car.dart';
 import 'package:flutter_app/screens/app_bar.dart';
@@ -11,13 +12,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  // Controlador del TabView
+  // Controller of TabView
   late TabController _tabController;
-  // Lista de autos
+  // List of cars
   final List<Car> _cars = [];
   // Cars Pagination
   int _carsPagination = 1;
-  //
+  // Bucket
   final PageStorageBucket _bucket = PageStorageBucket();
 
   @override
@@ -27,6 +28,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       vsync: this,
       initialIndex: 0,
     );
+    setFirebase();
     super.initState();
   }
 
@@ -34,6 +36,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  Future<void> setFirebase() async {
+    // Instanciate Firabase
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    // Request device permissions
+    await messaging.requestPermission();
   }
 
   // GET Cars Pagination
@@ -51,6 +60,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         child: TabBarView(
           controller: _tabController,
           children: [
+            // Cars Class
             PageStorage(
               bucket: _bucket,
               child: Cars(
@@ -59,10 +69,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 setCarsPagination: _setCarsPagination,
               ),
             ),
+            // Dummy
             Container(
               alignment: Alignment.center,
               child: const Text("No hay resultados."),
             ),
+            // Dummy
             Container(
               alignment: Alignment.center,
               child: const Text("No hay resultados."),
