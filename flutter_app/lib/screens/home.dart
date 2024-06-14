@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_app/models/car.dart';
 import 'package:flutter_app/screens/app_bar.dart';
 import 'package:flutter_app/screens/cars.dart';

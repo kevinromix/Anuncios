@@ -29,6 +29,8 @@ class _CarsState extends State<Cars> {
     name: "\$",
     decimalDigits: 2,
   );
+  FocusNode _focusNode = FocusNode();
+  TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -40,9 +42,9 @@ class _CarsState extends State<Cars> {
 
   @override
   void dispose() {
-    widget.cars.clear();
-    widget.cars.addAll(_cars);
     widget.setCarsPagination(_carsPagination);
+    _focusNode.dispose();
+    _textEditingController.dispose();
     super.dispose();
   }
 
@@ -55,7 +57,9 @@ class _CarsState extends State<Cars> {
       ).then((result) {
         if ((result.data as List).length < 5) _maxReached = true;
         for (var car in (result.data as List)) {
-          _cars.add(Car.fromJson(car));
+          Car carItem = Car.fromJson(car);
+          _cars.add(carItem);
+          widget.cars.add(carItem);
         }
         setState(() {
           _carsPagination++;
@@ -112,61 +116,102 @@ class _CarsState extends State<Cars> {
 
   @override
   Widget build(BuildContext context) {
-    return _cars.isNotEmpty
-        ? ListView(
-            children: [
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _cars.length,
-                separatorBuilder: (context, index) => const Divider(
-                  color: Colors.transparent,
-                ),
-                padding: const EdgeInsets.only(top: 5),
-                itemBuilder: (context, index) {
-                  Car car = _cars.elementAt(index);
-                  return customCard(car);
-                },
-              ),
-              const SizedBox(height: 20),
-              !_maxReached
-                  ? !_isLoadingMore
-                      ? Align(
-                          alignment: Alignment.center,
-                          child: TextButton(
-                            style: const ButtonStyle(
-                              fixedSize: MaterialStatePropertyAll(
-                                Size(250, 50),
-                              ),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isLoadingMore = true;
-                              });
-                              _getAutos();
-                            },
-                            child: const Text("Ver más"),
-                          ),
-                        )
-                      : Container(
-                          height: 40,
-                          alignment: Alignment.center,
-                          child: const CircularProgressIndicator(),
-                        )
-                  : Text(
-                      "Mostrando: ${_cars.length} resultados",
-                      textAlign: TextAlign.center,
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.only(top: 15, bottom: 10),
+          constraints: const BoxConstraints(maxWidth: 300, maxHeight: 55),
+          child: TextField(
+            enabled: !_isLoading,
+            focusNode: _focusNode,
+            controller: _textEditingController,
+            textInputAction: TextInputAction.search,
+            decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                label: const Text("Search"),
+                prefixIcon: const Icon(Icons.search),
+                suffix: IconButton(
+                  icon: const Icon(Icons.cancel),
+                  onPressed: () {
+                    _textEditingController.clear();
+                    _focusNode.unfocus();
+                    _cars.clear();
+                    _cars.addAll(widget.cars);
+                    setState(() {});
+                  },
+                )),
+            onChanged: (value) {
+              _cars.clear();
+              if (value.isEmpty) {
+                _cars.addAll(widget.cars);
+              } else {
+                _cars.addAll(widget.cars.where((element) =>
+                    element.model.toLowerCase().contains(value.toLowerCase())));
+              }
+              setState(() {});
+            },
+          ),
+        ),
+        Expanded(
+          child: _cars.isNotEmpty
+              ? ListView(
+                  children: [
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _cars.length,
+                      separatorBuilder: (context, index) => const Divider(
+                        color: Colors.transparent,
+                      ),
+                      // padding: const EdgeInsets.only(top: 5),
+                      itemBuilder: (context, index) {
+                        Car car = _cars.elementAt(index);
+                        return customCard(car);
+                      },
                     ),
-            ],
-          )
-        : _isLoading
-            ? const Align(
-                alignment: Alignment.center,
-                child: CircularProgressIndicator(),
-              )
-            : Container(
-                alignment: Alignment.center,
-                child: const Text("No hay resultados"),
-              );
+                    const SizedBox(height: 20),
+                    !_maxReached
+                        ? !_isLoadingMore
+                            ? Align(
+                                alignment: Alignment.center,
+                                child: TextButton(
+                                  style: const ButtonStyle(
+                                    fixedSize: MaterialStatePropertyAll(
+                                      Size(250, 50),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isLoadingMore = true;
+                                    });
+                                    _getAutos();
+                                  },
+                                  child: const Text("Ver más"),
+                                ),
+                              )
+                            : Container(
+                                height: 40,
+                                alignment: Alignment.center,
+                                child: const CircularProgressIndicator(),
+                              )
+                        : Text(
+                            "Mostrando: ${_cars.length} resultados",
+                            textAlign: TextAlign.center,
+                          ),
+                  ],
+                )
+              : _isLoading
+                  ? const Align(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(),
+                    )
+                  : Container(
+                      alignment: Alignment.center,
+                      child: const Text("No hay resultados"),
+                    ),
+        ),
+      ],
+    );
   }
 }
