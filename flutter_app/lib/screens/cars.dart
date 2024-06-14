@@ -58,13 +58,15 @@ class _CarsState extends State<Cars> {
           PageStorage.of(context)
               .writeState(context, _maxReached, identifier: 'maxReached');
         }
-        for (var car in (result.data as List)) {
-          Car carItem = Car.fromJson(car);
-          _cars.add(carItem);
-          widget.cars.add(carItem);
+        if (!result.hasError) {
+          for (var car in (result.data as List)) {
+            Car carItem = Car.fromJson(car);
+            _cars.add(carItem);
+            widget.cars.add(carItem);
+          }
+          _carsPagination++;
         }
         setState(() {
-          _carsPagination++;
           _isLoading = false;
           _isLoadingMore = false;
         });
