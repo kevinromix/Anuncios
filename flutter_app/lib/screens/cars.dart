@@ -53,12 +53,12 @@ class _CarsState extends State<Cars> {
         path: "/api/autos",
         page: _carsPagination.toString(),
       ).then((result) {
-        if ((result.data as List).length < 5) {
-          _maxReached = true;
-          PageStorage.of(context)
-              .writeState(context, _maxReached, identifier: 'maxReached');
-        }
         if (!result.hasError) {
+          if ((result.data as List).length < 5) {
+            _maxReached = true;
+            PageStorage.of(context)
+                .writeState(context, _maxReached, identifier: 'maxReached');
+          }
           for (var car in (result.data as List)) {
             Car carItem = Car.fromJson(car);
             _cars.add(carItem);
