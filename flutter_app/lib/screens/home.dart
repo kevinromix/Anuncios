@@ -18,8 +18,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   // Cars Pagination
   int _carsPagination = 1;
   //
-  PageStorageBucket _bucket = PageStorageBucket();
-  PageStorageKey _electronicsPagination = PageStorageKey(1);
+  final PageStorageBucket _bucket = PageStorageBucket();
 
   @override
   void initState() {
@@ -52,15 +51,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         child: TabBarView(
           controller: _tabController,
           children: [
-            Cars(
-              cars: _cars,
-              getCarsPagination: getCarsPagination,
-              setCarsPagination: _setCarsPagination,
-            ),
-            Container(),
             PageStorage(
               bucket: _bucket,
-              child: Container(),
+              child: Cars(
+                cars: _cars,
+                getCarsPagination: getCarsPagination,
+                setCarsPagination: _setCarsPagination,
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: const Text("No hay resultados."),
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: const Text("No hay resultados."),
             ),
           ],
         ),

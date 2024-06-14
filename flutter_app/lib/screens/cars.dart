@@ -1,3 +1,4 @@
+import 'package:flutter_app/screens/search.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/api/fetch.dart';
@@ -23,28 +24,28 @@ class _CarsState extends State<Cars> {
   static bool _isLoadingMore = true;
   final List<Car> _cars = [];
   late int _carsPagination;
-  bool _maxReached = false;
+  late bool _maxReached; // Set if all records have been fetched
+  // Money format
   final NumberFormat formatCurrency = NumberFormat.simpleCurrency(
     locale: "es_MX",
     name: "\$",
     decimalDigits: 2,
   );
-  FocusNode _focusNode = FocusNode();
-  TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {
     _cars.addAll(widget.cars);
     _carsPagination = widget.getCarsPagination();
     if (widget.cars.isEmpty) _getAutos();
+    _maxReached =
+        PageStorage.of(context).readState(context, identifier: 'maxReached') ??
+            false;
     super.initState();
   }
 
   @override
   void dispose() {
     widget.setCarsPagination(_carsPagination);
-    _focusNode.dispose();
-    _textEditingController.dispose();
     super.dispose();
   }
 
@@ -55,7 +56,11 @@ class _CarsState extends State<Cars> {
         path: "/api/autos",
         page: _carsPagination.toString(),
       ).then((result) {
-        if ((result.data as List).length < 5) _maxReached = true;
+        if ((result.data as List).length < 5) {
+          _maxReached = true;
+          PageStorage.of(context)
+              .writeState(context, _maxReached, identifier: 'maxReached');
+        }
         for (var car in (result.data as List)) {
           Car carItem = Car.fromJson(car);
           _cars.add(carItem);
@@ -114,6 +119,23 @@ class _CarsState extends State<Cars> {
     );
   }
 
+  void _onTextFieldChanged(value) {
+    _cars.clear();
+    if (value.isEmpty) {
+      _cars.addAll(widget.cars);
+    } else {
+      _cars.addAll(widget.cars.where((element) =>
+          element.model.toLowerCase().contains(value.toLowerCase())));
+    }
+    setState(() {});
+  }
+
+  void _onTextFieldClear() {
+    _cars.clear();
+    _cars.addAll(widget.cars);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -122,35 +144,10 @@ class _CarsState extends State<Cars> {
           alignment: Alignment.center,
           margin: const EdgeInsets.only(top: 15, bottom: 10),
           constraints: const BoxConstraints(maxWidth: 300, maxHeight: 55),
-          child: TextField(
-            enabled: !_isLoading,
-            focusNode: _focusNode,
-            controller: _textEditingController,
-            textInputAction: TextInputAction.search,
-            decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                label: const Text("Search"),
-                prefixIcon: const Icon(Icons.search),
-                suffix: IconButton(
-                  icon: const Icon(Icons.cancel),
-                  onPressed: () {
-                    _textEditingController.clear();
-                    _focusNode.unfocus();
-                    _cars.clear();
-                    _cars.addAll(widget.cars);
-                    setState(() {});
-                  },
-                )),
-            onChanged: (value) {
-              _cars.clear();
-              if (value.isEmpty) {
-                _cars.addAll(widget.cars);
-              } else {
-                _cars.addAll(widget.cars.where((element) =>
-                    element.model.toLowerCase().contains(value.toLowerCase())));
-              }
-              setState(() {});
-            },
+          child: SearchTextField(
+            isLoading: _isLoading,
+            onTextFieldChanged: _onTextFieldChanged,
+            onTextFieldClear: _onTextFieldClear,
           ),
         ),
         Expanded(
@@ -164,7 +161,6 @@ class _CarsState extends State<Cars> {
                       separatorBuilder: (context, index) => const Divider(
                         color: Colors.transparent,
                       ),
-                      // padding: const EdgeInsets.only(top: 5),
                       itemBuilder: (context, index) {
                         Car car = _cars.elementAt(index);
                         return customCard(car);
@@ -182,9 +178,11 @@ class _CarsState extends State<Cars> {
                                     ),
                                   ),
                                   onPressed: () {
+                                    // TODO: Use BLOC to avoid re-render all the widget
                                     setState(() {
                                       _isLoadingMore = true;
                                     });
+
                                     _getAutos();
                                   },
                                   child: const Text("Ver más"),
