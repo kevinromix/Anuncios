@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 Future<ResponseData> fetch({
   required String method,
   required String path,
+  String page = '1',
   final Map<String, dynamic>? body,
 }) async {
   ResponseData responseData = ResponseData();
@@ -16,6 +17,7 @@ Future<ResponseData> fetch({
     host: "127.0.0.1",
     port: 3000,
     path: path,
+    queryParameters: {'page': page},
   );
 
   try {

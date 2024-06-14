@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/api/fetch.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_app/models/car.dart';
 import 'package:flutter_app/screens/app_bar.dart';
 import 'package:flutter_app/screens/cars.dart';
@@ -16,6 +16,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   // Lista de autos
   final List<Car> _cars = [];
+  // Cars Pagination
+  int _carsPagination = 1;
+  //
+  PageStorageBucket _bucket = PageStorageBucket();
+  PageStorageKey _electronicsPagination = PageStorageKey(1);
 
   @override
   void initState() {
@@ -24,7 +29,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       vsync: this,
       initialIndex: 0,
     );
-    _getAutos();
     super.initState();
   }
 
@@ -34,26 +38,33 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  Future<void> _getAutos() async {
-    await fetch(method: "get", path: "/autos").then((result) {
-      print(result.hasError);
-      print(result.message);
-      (result.data).forEach((car) => _cars.add(Car.fromJson(car)));
-      setState(() {});
-    });
-  }
+  // GET Cars Pagination
+  int getCarsPagination() => _carsPagination;
+
+  // SET Cars Pagination
+  void _setCarsPagination(int carsPagination) =>
+      _carsPagination = carsPagination;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(tabController: _tabController),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          Cars(cars: _cars),
-          Container(),
-          Container(),
-        ],
+      body: SafeArea(
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            Cars(
+              cars: _cars,
+              getCarsPagination: getCarsPagination,
+              setCarsPagination: _setCarsPagination,
+            ),
+            Container(),
+            PageStorage(
+              bucket: _bucket,
+              child: Container(),
+            ),
+          ],
+        ),
       ),
     );
   }
