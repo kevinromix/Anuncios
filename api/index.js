@@ -61,7 +61,7 @@ app.post("/api/mensaje", async (req, res) => {
   try {
     await transporter.sendMail({
       from: '"Anuncios" <' + config.mail + ">",
-      to: config.mail,
+      to: correo,
       subject: "Nuevo Mensaje",
       html: `
       <b>SE RECIBIO UN COMENTARIO DESDE EL SISTEMA DE ANUNCIOS EMPRESARIALES CON LA SIGUIENTE INFORMACÓN DE CONTACTO</b>
