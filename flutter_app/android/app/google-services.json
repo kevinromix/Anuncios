@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1094119926815",
+    "project_id": "anuncios-49fb0",
+    "storage_bucket": "anuncios-49fb0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094119926815:android:6dedba8ea22ebddf0f392a",
+        "android_client_info": {
+          "package_name": "com.example.flutter_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJyHB5uptuDwuLp2yMsLl9xJDmhWTpzaw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
