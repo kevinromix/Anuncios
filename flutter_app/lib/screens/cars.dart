@@ -1,5 +1,6 @@
+import 'package:flutter_app/helpers/money_format.dart';
+import 'package:flutter_app/screens/detalle/detalle.dart';
 import 'package:flutter_app/screens/search.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/api/fetch.dart';
 import 'package:flutter_app/models/car.dart';
@@ -25,12 +26,6 @@ class _CarsState extends State<Cars> {
   final List<Car> _cars = [];
   late int _carsPagination;
   late bool _maxReached; // Set if all records have been fetched
-  // Money format
-  final NumberFormat formatCurrency = NumberFormat.simpleCurrency(
-    locale: "es_MX",
-    name: "\$",
-    decimalDigits: 2,
-  );
 
   @override
   void initState() {
@@ -52,6 +47,8 @@ class _CarsState extends State<Cars> {
   Future<void> _getAutos() async {
     if (_isLoadingMore) {
       await fetch(
+        hostIp:
+            "192.168.1.22", //Use PC IP Network, just in case localhost does not work in mobile test
         method: "get",
         path: "/api/autos",
         page: _carsPagination.toString(),
@@ -82,6 +79,16 @@ class _CarsState extends State<Cars> {
         alignment: Alignment.center,
         constraints: const BoxConstraints(minHeight: 120),
         child: ListTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: ((context) => Detalle(
+                      car: car,
+                    )),
+              ),
+            );
+          },
           titleAlignment: ListTileTitleAlignment.center,
           leading: Image.asset(
             'assets/${car.image1}.jpg',
@@ -140,6 +147,7 @@ class _CarsState extends State<Cars> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Search Widget
         Container(
           alignment: Alignment.center,
           margin: const EdgeInsets.only(top: 15, bottom: 10),
@@ -150,6 +158,7 @@ class _CarsState extends State<Cars> {
             onTextFieldClear: _onTextFieldClear,
           ),
         ),
+        // List Widget
         Expanded(
           child: _cars.isNotEmpty
               ? ListView(
@@ -170,6 +179,7 @@ class _CarsState extends State<Cars> {
                     !_maxReached
                         ? !_isLoadingMore
                             ? Align(
+                                //"Ver mas" Button widget
                                 alignment: Alignment.center,
                                 child: TextButton(
                                   style: const ButtonStyle(
@@ -182,7 +192,7 @@ class _CarsState extends State<Cars> {
                                     setState(() {
                                       _isLoadingMore = true;
                                     });
-
+                                    // Call api for more results
                                     _getAutos();
                                   },
                                   child: const Text("Ver más"),
@@ -191,7 +201,8 @@ class _CarsState extends State<Cars> {
                             : Container(
                                 height: 40,
                                 alignment: Alignment.center,
-                                child: const CircularProgressIndicator(),
+                                child:
+                                    const CircularProgressIndicator(), // Loader
                               )
                         : Text(
                             "Mostrando: ${_cars.length} resultados",
@@ -202,11 +213,11 @@ class _CarsState extends State<Cars> {
               : _isLoading
                   ? const Align(
                       alignment: Alignment.center,
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(), // Main Loader
                     )
                   : Container(
                       alignment: Alignment.center,
-                      child: const Text("No hay resultados"),
+                      child: const Text("No hay resultados"), // No results
                     ),
         ),
       ],
