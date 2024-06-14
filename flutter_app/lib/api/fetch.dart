@@ -5,6 +5,7 @@ import 'package:flutter_app/models/response_data.dart';
 import 'package:http/http.dart' as http;
 
 Future<ResponseData> fetch({
+  String hostIp = "127.0.0.1",
   required String method,
   required String path,
   String page = '1',
@@ -14,7 +15,7 @@ Future<ResponseData> fetch({
 
   final Uri url = Uri(
     scheme: 'http',
-    host: "127.0.0.1",
+    host: hostIp,
     port: 3000,
     path: path,
     queryParameters: {'page': page},
@@ -34,6 +35,9 @@ Future<ResponseData> fetch({
           url,
           body: json.encode(body),
           encoding: utf8,
+          headers: {
+            'Content-Type': 'application/json',
+          },
         );
         break;
 
