@@ -30,8 +30,9 @@ class _MensajeriaState extends State<Mensajeria> {
     required String mensaje,
   }) async {
     await fetch(
-        hostIp:
-            "192.168.1.22", //Use PC IP Network, just in case localhost does not work in mobile test
+        // hostIp:
+        // "192.168.1.22",
+        //Use PC IP Network, just in case localhost does not work in mobile test
         method: "post",
         path: "/api/mensaje",
         body: {

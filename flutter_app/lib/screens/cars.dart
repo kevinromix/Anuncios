@@ -47,8 +47,9 @@ class _CarsState extends State<Cars> {
   Future<void> _getAutos() async {
     if (_isLoadingMore) {
       await fetch(
-        hostIp:
-            "192.168.1.22", //Use PC IP Network, just in case localhost does not work in mobile test
+        // hostIp:
+        // "192.168.1.22",
+        //Use PC IP Network, just in case localhost does not work in mobile test
         method: "get",
         path: "/api/autos",
         page: _carsPagination.toString(),
