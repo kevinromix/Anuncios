@@ -5,13 +5,15 @@ import 'package:flutter_app/models/response_data.dart';
 import 'package:http/http.dart' as http;
 
 Future<ResponseData> fetch({
-  String hostIp = "127.0.0.1",
   required String method,
   required String path,
   String page = '1',
   final Map<String, dynamic>? body,
 }) async {
   ResponseData responseData = ResponseData();
+  String hostIp = "127.0.0.1";
+  hostIp =
+      "192.168.1.22"; //Use PC IP Network, just in case localhost does not work in mobile test
 
   final Uri url = Uri(
     scheme: 'http',

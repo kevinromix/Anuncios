@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/api/fetch.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Mensajeria extends StatefulWidget {
   const Mensajeria({super.key});
@@ -29,17 +30,11 @@ class _MensajeriaState extends State<Mensajeria> {
     required String correo,
     required String mensaje,
   }) async {
-    await fetch(
-        // hostIp:
-        // "192.168.1.22",
-        //Use PC IP Network, just in case localhost does not work in mobile test
-        method: "post",
-        path: "/api/mensaje",
-        body: {
-          "Nombre": nombre,
-          "Correo": correo,
-          "Mensaje": mensaje,
-        }).then((result) {
+    await fetch(method: "post", path: "/api/mensaje", body: {
+      "Nombre": nombre,
+      "Correo": correo,
+      "Mensaje": mensaje,
+    }).then((result) {
       if (!result.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -50,6 +45,14 @@ class _MensajeriaState extends State<Mensajeria> {
         Navigator.pop(context);
       }
     });
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 
   @override
@@ -88,10 +91,12 @@ class _MensajeriaState extends State<Mensajeria> {
                       ],
                     ),
                     const SizedBox(height: 5),
-                    const Card(
+                    Card(
+                    clipBehavior: Clip.hardEdge,
                       child: ListTile(
-                        title: Text("Mobile"),
-                        subtitle: Text("+91 98765 43210"),
+                        onTap: () => _makePhoneCall("+91 98765 43210"),
+                        title: const Text("Mobile"),
+                        subtitle: const Text("+91 98765 43210"),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -119,11 +124,12 @@ class _MensajeriaState extends State<Mensajeria> {
                                 : AutovalidateMode.disabled,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "Completa el campo";
+                                return "Completa el nombre";
                               }
                               return null;
                             },
                           ),
+                          const SizedBox(height: 15),
                           TextFormField(
                             controller: _correoController,
                             enabled: !_isSending,
@@ -136,14 +142,14 @@ class _MensajeriaState extends State<Mensajeria> {
                                 : AutovalidateMode.disabled,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "Completa el campo";
+                                return "Completa el correo";
                               } else if (!isValidEmail(value)) {
                                 return "Ingrese un email valido";
                               }
                               return null;
                             },
                           ),
-                          const SizedBox(height: 15),
+                          const SizedBox(height: 25),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(

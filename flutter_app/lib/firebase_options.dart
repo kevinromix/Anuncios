@@ -41,46 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDD9bf5g3qS34VbjIEtGi_7hxB5WtN0-k0',
-    appId: '1:1094119926815:web:28e6da7fc3d8d9f00f392a',
-    messagingSenderId: '1094119926815',
-    projectId: 'anuncios-49fb0',
-    authDomain: 'anuncios-49fb0.firebaseapp.com',
-    storageBucket: 'anuncios-49fb0.appspot.com',
+    apiKey: 'AIzaSyBJt-Sv8hOJmdXveujA5k5I3GSwO1jsIgc',
+    appId: '1:753570206235:web:db911c45cfbef674151ebe',
+    messagingSenderId: '753570206235',
+    projectId: 'anuncios-aa82d',
+    authDomain: 'anuncios-aa82d.firebaseapp.com',
+    storageBucket: 'anuncios-aa82d.appspot.com',
+    measurementId: 'G-SLXDXG97W3',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBJyHB5uptuDwuLp2yMsLl9xJDmhWTpzaw',
-    appId: '1:1094119926815:android:6dedba8ea22ebddf0f392a',
-    messagingSenderId: '1094119926815',
-    projectId: 'anuncios-49fb0',
-    storageBucket: 'anuncios-49fb0.appspot.com',
+    apiKey: 'AIzaSyBLzoKzeBYK1wHxsatOe_uHkHhf28_43-Q',
+    appId: '1:753570206235:android:03bd9ba71919eda0151ebe',
+    messagingSenderId: '753570206235',
+    projectId: 'anuncios-aa82d',
+    storageBucket: 'anuncios-aa82d.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAwES9uR9n0j9-gTyj7YuF-KTt5DtOgc0Y',
-    appId: '1:1094119926815:ios:03478b8e7196f64b0f392a',
-    messagingSenderId: '1094119926815',
-    projectId: 'anuncios-49fb0',
-    storageBucket: 'anuncios-49fb0.appspot.com',
+    apiKey: 'AIzaSyBl5CiDHZRKh5hw0VSVMIkcvia96IaiOKU',
+    appId: '1:753570206235:ios:a6afd579e9d2feed151ebe',
+    messagingSenderId: '753570206235',
+    projectId: 'anuncios-aa82d',
+    storageBucket: 'anuncios-aa82d.appspot.com',
     iosBundleId: 'com.example.flutterApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAwES9uR9n0j9-gTyj7YuF-KTt5DtOgc0Y',
-    appId: '1:1094119926815:ios:03478b8e7196f64b0f392a',
-    messagingSenderId: '1094119926815',
-    projectId: 'anuncios-49fb0',
-    storageBucket: 'anuncios-49fb0.appspot.com',
+    apiKey: 'AIzaSyBl5CiDHZRKh5hw0VSVMIkcvia96IaiOKU',
+    appId: '1:753570206235:ios:a6afd579e9d2feed151ebe',
+    messagingSenderId: '753570206235',
+    projectId: 'anuncios-aa82d',
+    storageBucket: 'anuncios-aa82d.appspot.com',
     iosBundleId: 'com.example.flutterApp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDD9bf5g3qS34VbjIEtGi_7hxB5WtN0-k0',
-    appId: '1:1094119926815:web:3465e27761af6e310f392a',
-    messagingSenderId: '1094119926815',
-    projectId: 'anuncios-49fb0',
-    authDomain: 'anuncios-49fb0.firebaseapp.com',
-    storageBucket: 'anuncios-49fb0.appspot.com',
+    apiKey: 'AIzaSyBJt-Sv8hOJmdXveujA5k5I3GSwO1jsIgc',
+    appId: '1:753570206235:web:50fc602978db5305151ebe',
+    messagingSenderId: '753570206235',
+    projectId: 'anuncios-aa82d',
+    authDomain: 'anuncios-aa82d.firebaseapp.com',
+    storageBucket: 'anuncios-aa82d.appspot.com',
+    measurementId: 'G-6T89MXS1MP',
   );
+
 }

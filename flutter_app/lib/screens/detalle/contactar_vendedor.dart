@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/detalle/mensajeria/mensajeria.dart';
 
-class Contactar extends StatefulWidget {
-  const Contactar({super.key});
+class BtnContactar extends StatefulWidget {
+  const BtnContactar({super.key});
 
   @override
-  State<Contactar> createState() => _ContactarState();
+  State<BtnContactar> createState() => _ContactarState();
 }
 
-class _ContactarState extends State<Contactar> {
+class _ContactarState extends State<BtnContactar> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(

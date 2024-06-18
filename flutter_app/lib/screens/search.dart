@@ -1,52 +1,42 @@
 import 'package:flutter/material.dart';
 
-class SearchTextField extends StatefulWidget {
+class SearchTextField extends StatelessWidget {
   final bool isLoading;
   final Function(String) onTextFieldChanged;
   final Function() onTextFieldClear;
+  final FocusNode focusNode;
+  final TextEditingController textEditingController;
   const SearchTextField({
     super.key,
     required this.isLoading,
     required this.onTextFieldChanged,
     required this.onTextFieldClear,
+    required this.focusNode,
+    required this.textEditingController,
   });
-
-  @override
-  State<SearchTextField> createState() => _SearchTextFieldState();
-}
-
-class _SearchTextFieldState extends State<SearchTextField> {
-  final FocusNode _focusNode = FocusNode();
-  final TextEditingController _textEditingController = TextEditingController();
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    _textEditingController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      enabled: !widget.isLoading,
-      focusNode: _focusNode,
-      controller: _textEditingController,
+      enabled: !isLoading,
+      focusNode: focusNode,
+      controller: textEditingController,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
-          border: const OutlineInputBorder(),
-          label: const Text("Search"),
-          prefixIcon: const Icon(Icons.search),
-          suffix: IconButton(
-            icon: const Icon(Icons.cancel),
-            onPressed: () {
-              _textEditingController.clear();
-              _focusNode.unfocus();
-              widget.onTextFieldClear();
-            },
-          )),
+        border: const OutlineInputBorder(),
+        label: const Text("Search"),
+        prefixIcon: const Icon(Icons.search),
+        suffix: IconButton(
+          icon: const Icon(Icons.cancel),
+          onPressed: () {
+            textEditingController.clear();
+            focusNode.unfocus();
+            onTextFieldClear();
+          },
+        ),
+      ),
       onChanged: (value) {
-        widget.onTextFieldChanged(value);
+        onTextFieldChanged(value);
       },
     );
   }

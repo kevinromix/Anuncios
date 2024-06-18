@@ -1,9 +1,9 @@
-import 'package:flutter_app/helpers/money_format.dart';
-import 'package:flutter_app/screens/detalle/detalle.dart';
 import 'package:flutter_app/screens/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/api/fetch.dart';
 import 'package:flutter_app/models/car.dart';
+
+import 'custom_card.dart';
 
 class Cars extends StatefulWidget {
   final List<Car> cars;
@@ -26,12 +26,15 @@ class _CarsState extends State<Cars> {
   final List<Car> _cars = [];
   late int _carsPagination;
   late bool _maxReached; // Set if all records have been fetched
+  final _focusNode = FocusNode();
+  final _textEditingController = TextEditingController();
 
   @override
   void initState() {
     _cars.addAll(widget.cars);
     _carsPagination = widget.getCarsPagination();
     if (widget.cars.isEmpty) _getAutos();
+    // Variable to save state when all data has been fetched
     _maxReached =
         PageStorage.of(context).readState(context, identifier: 'maxReached') ??
             false;
@@ -47,14 +50,12 @@ class _CarsState extends State<Cars> {
   Future<void> _getAutos() async {
     if (_isLoadingMore) {
       await fetch(
-        // hostIp:
-        // "192.168.1.22",
-        //Use PC IP Network, just in case localhost does not work in mobile test
         method: "get",
         path: "/api/autos",
         page: _carsPagination.toString(),
       ).then((result) {
         if (!result.hasError) {
+          // Verify is not the last data
           if ((result.data as List).length < 5) {
             _maxReached = true;
             PageStorage.of(context)
@@ -75,61 +76,7 @@ class _CarsState extends State<Cars> {
     }
   }
 
-  Card customCard(car) {
-    return Card(
-      elevation: 3,
-      child: Container(
-        alignment: Alignment.center,
-        constraints: const BoxConstraints(minHeight: 120),
-        child: ListTile(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: ((context) => Detalle(
-                      car: car,
-                    )),
-              ),
-            );
-          },
-          titleAlignment: ListTileTitleAlignment.center,
-          leading: Image.asset(
-            'assets/${car.image1}.jpg',
-            fit: BoxFit.cover,
-            width: 100,
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Text(
-                  car.model,
-                  softWrap: false,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
-              Text(
-                formatCurrency
-                    .format(double.parse(car.price.replaceAll("\$", ""))),
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                textAlign: TextAlign.justify,
-              ),
-            ],
-          ),
-          subtitle: Text(
-            car.description,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          isThreeLine: true,
-        ),
-      ),
-    );
-  }
-
-  void _onTextFieldChanged(value) {
+  void _onTextFieldChanged(String value) {
     _cars.clear();
     if (value.isEmpty) {
       _cars.addAll(widget.cars);
@@ -159,12 +106,15 @@ class _CarsState extends State<Cars> {
             isLoading: _isLoading,
             onTextFieldChanged: _onTextFieldChanged,
             onTextFieldClear: _onTextFieldClear,
+            focusNode: _focusNode,
+            textEditingController: _textEditingController,
           ),
         ),
         // List Widget
         Expanded(
           child: _cars.isNotEmpty
               ? ListView(
+                  padding: const EdgeInsets.only(bottom: 10),
                   children: [
                     ListView.separated(
                       shrinkWrap: true,
@@ -175,7 +125,7 @@ class _CarsState extends State<Cars> {
                       ),
                       itemBuilder: (context, index) {
                         Car car = _cars.elementAt(index);
-                        return customCard(car);
+                        return customCard(car, context: context);
                       },
                     ),
                     const SizedBox(height: 20),
@@ -186,7 +136,7 @@ class _CarsState extends State<Cars> {
                                 alignment: Alignment.center,
                                 child: TextButton(
                                   style: const ButtonStyle(
-                                    fixedSize: MaterialStatePropertyAll(
+                                    fixedSize: WidgetStatePropertyAll(
                                       Size(250, 50),
                                     ),
                                   ),

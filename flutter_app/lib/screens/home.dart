@@ -1,8 +1,11 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/car.dart';
+import 'package:flutter_app/models/electronic.dart';
 import 'package:flutter_app/screens/app_bar.dart';
-import 'package:flutter_app/screens/cars.dart';
+import 'package:flutter_app/screens/cars/cars.dart';
+import 'package:flutter_app/screens/electronics/electronics.dart';
+
+import '../helpers/init_firebase.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,10 +17,19 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   // Controller of TabView
   late TabController _tabController;
+
   // List of cars
   final List<Car> _cars = [];
+
+  // List of electronics
+  final List<Electronic> _electronics = [];
+
   // Cars Pagination
   int _carsPagination = 1;
+
+  // Electronics Pagination
+  int _electronicsPagination = 1;
+
   // Bucket
   final PageStorageBucket _bucket = PageStorageBucket();
 
@@ -38,19 +50,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  Future<void> setFirebase() async {
-    // Instanciate Firabase
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    // Request device permissions
-    await messaging.requestPermission();
-  }
-
   // GET Cars Pagination
-  int getCarsPagination() => _carsPagination;
+  int _getCarsPagination() => _carsPagination;
 
   // SET Cars Pagination
   void _setCarsPagination(int carsPagination) =>
       _carsPagination = carsPagination;
+
+  // GET Cars Pagination
+  int _getElectronicsPagination() => _electronicsPagination;
+
+  // SET Cars Pagination
+  void _setElectronicsPagination(int electronicsPagination) =>
+      _electronicsPagination = electronicsPagination;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +77,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               bucket: _bucket,
               child: Cars(
                 cars: _cars,
-                getCarsPagination: getCarsPagination,
+                getCarsPagination: _getCarsPagination,
                 setCarsPagination: _setCarsPagination,
               ),
             ),
@@ -74,10 +86,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               alignment: Alignment.center,
               child: const Text("No hay resultados."),
             ),
-            // Dummy
-            Container(
-              alignment: Alignment.center,
-              child: const Text("No hay resultados."),
+            // Electronics class
+            PageStorage(
+              bucket: _bucket,
+              child: Electronics(
+                electronics: _electronics,
+                getElectronicsPagination: _getElectronicsPagination,
+                setElectronicsPagination: _setElectronicsPagination,
+              ),
             ),
           ],
         ),

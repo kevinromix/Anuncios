@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/helpers/money_format.dart';
-import 'package:flutter_app/models/car.dart';
+import 'package:flutter_app/models/electronic.dart';
 import 'package:flutter_app/screens/detalle/change_image.dart';
 import 'package:flutter_app/screens/detalle/contactar_vendedor.dart';
 
 class Detalle extends StatelessWidget {
-  final Car car;
+  final Electronic electronic;
   const Detalle({
     super.key,
-    required this.car,
+    required this.electronic,
   });
 
   @override
@@ -23,9 +23,9 @@ class Detalle extends StatelessWidget {
           child: Column(
             children: [
               ChangeImage(
-                image1: car.image1,
-                image2: car.image2,
-                image3: car.image3,
+                image1: electronic.image1,
+                image2: electronic.image2,
+                image3: electronic.image3,
               ),
               Expanded(
                 child: Padding(
@@ -39,7 +39,7 @@ class Detalle extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            car.model,
+                            electronic.model,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge!
@@ -54,7 +54,7 @@ class Detalle extends StatelessWidget {
                                 color: Colors.amber,
                               ),
                               Text(
-                                car.stars.toString(),
+                                electronic.stars.toString(),
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
@@ -66,7 +66,7 @@ class Detalle extends StatelessWidget {
                                 width: 20,
                               ),
                               Text(
-                                "${car.reviews} reviews",
+                                "${electronic.reviews} reviews",
                                 style: Theme.of(context).textTheme.bodySmall,
                               )
                             ],
@@ -77,7 +77,7 @@ class Detalle extends StatelessWidget {
                         children: [
                           Text(
                             formatCurrency.format(
-                                double.parse(car.price.replaceAll("\$", ""))),
+                                double.parse(electronic.price.replaceAll("\$", ""))),
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],
@@ -85,7 +85,7 @@ class Detalle extends StatelessWidget {
                       const SizedBox(height: 30),
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(car.description),
+                        child: Text(electronic.description),
                       ),
                     ],
                   ),
