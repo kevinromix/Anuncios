@@ -38,6 +38,18 @@ app.get("/api/autos", async (req, res) => {
   res.status(200).json(autos);
 });
 
+
+// Obtener Autos
+app.get("/api/electronics", async (req, res) => {
+  const pageSize = 5; // Number of items per page
+  const pageNumber = req.query.page || 1; // Get the current page number from the query parameters
+  const startIndex = (pageNumber - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const data = await readData("electronics");
+  const autos = data.slice(startIndex, endIndex);
+  res.status(200).json(autos);
+});
+
 app.post("/api/mensaje", async (req, res) => {
   const body = req.body;
   let transporter = nodemailer.createTransport({
